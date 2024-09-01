@@ -119,7 +119,6 @@ app.post("/books", async (req, res) => {
   const { title, author, genre, image, available } = req.body;
 
   try {
-    // Check if a book with the same title already exists
     const existingBook = await Book.findOne({ title });
 
     if (existingBook) {

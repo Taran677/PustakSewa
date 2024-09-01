@@ -32,7 +32,7 @@ function CreateBook({ setBooks }) {
         body: JSON.stringify(formData),
       });
       if (!response.ok) {
-        toast.error("Check you internet connection and try again");
+        toast.error(`${response.json().message}`);
         throw new Error("Check you internet connection and try again");
       }
       const newBook = await response.json();
