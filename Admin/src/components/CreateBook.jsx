@@ -33,7 +33,6 @@ function CreateBook({ setBooks }) {
       });
 
       if (!response.ok) {
-        toast.error(`${response.json().message}`||"The book already exists.");
         throw new Error("Check you internet connection and try again");
       } else {
         const newBook = await response.json();
@@ -43,7 +42,7 @@ function CreateBook({ setBooks }) {
         setBooks((prevBooks) => [...prevBooks, newBook]);
       }
     } catch (error) {
-      toast.error("Could not create book!");
+      toast.error("The book already exists.");
 
       console.error("There was a problem with the create operation:", error);
     }
