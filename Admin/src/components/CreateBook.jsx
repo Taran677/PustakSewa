@@ -31,10 +31,9 @@ function CreateBook({ setBooks }) {
         },
         body: JSON.stringify(formData),
       });
-      console.log(response.json().message);
 
       if (!response.ok) {
-        toast.error(`${response.json().message}`);
+        toast.error(`${response.json().message}`||"The book already exists.");
         throw new Error("Check you internet connection and try again");
       } else {
         const newBook = await response.json();
