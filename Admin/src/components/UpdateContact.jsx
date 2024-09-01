@@ -1,9 +1,10 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
+
 function UpdateContact() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
@@ -24,24 +25,25 @@ function UpdateContact() {
       });
 
       if (response.status === 204) {
-        setMessage("No content to display.");
+        toast("No content to display");
         return;
       }
 
       if (!response.ok) {
-        const errorText = await response.text(); // Use text() to get the raw error message
+        const errorText = await response.text();
+        toast.error(errorText);
         throw new Error(errorText);
       }
 
       const updatedContact = await response.json();
-      setMessage(`Contact updated: ${JSON.stringify(updatedContact)}`);
+      toast.success(`Contact updated: ${JSON.stringify(updatedContact)}`);
     } catch (error) {
-      setMessage(`Error: ${error.message}`);
+      toast.error(`Error: ${error.message}`);
     }
   };
 
   return (
-    <div className="max-w-md  mx-auto justify-self-center self-center mt-8 p-6 bg-white shadow-md rounded-lg">
+    <div className="max-w-md relative mx-auto justify-self-center self-center mt-8 p-6 bg-white shadow-md rounded-lg">
       <h2 className="text-3xl font-semibold mb-4">Update Contact</h2>
       <input
         required
@@ -59,18 +61,18 @@ function UpdateContact() {
         placeholder="Phone"
         className="w-full p-2 mb-4 border border-gray-300 rounded-md"
       />
-      <input 
+      <input
         required
         type={showPassword ? "text" : "password"}
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         placeholder="Password"
-        className="w-full p-2 mb-4 border relative border-gray-300 rounded-md"
+        className="w-full p-2 mb-4 border  border-gray-300 rounded-md"
       />
       <button
         type="button"
         onClick={togglePasswordVisibility}
-        className="absolute inset-y-0 right-0 px-3 py-2 text-gray-500"
+        className="absolute inset-y-0 right-3 bottom-3 px-3 py-2 text-gray-500"
       >
         {showPassword ? "Hide" : "Show"}
       </button>
@@ -80,7 +82,6 @@ function UpdateContact() {
       >
         Update Contact
       </button>
-      {message && <p className="mt-4 text-purple-500">{message}</p>}
     </div>
   );
 }
