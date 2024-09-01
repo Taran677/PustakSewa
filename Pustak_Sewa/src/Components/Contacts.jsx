@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 export default function Contacts() {
-  const [contact, setContact] = useState({ setError });
+  const [contact, setContact] = useState({  });
   async function fetchContact() {
     try {
       const response = await fetch(
@@ -8,13 +8,11 @@ export default function Contacts() {
       );
       console.log(response);
       if (!response.ok) {
-        setError("Check you internet connection and try again");
         throw new Error("Check you internet connection and try again");
       }
       const data = await response.json();
       setContact(data[0]);
     } catch (error) {
-      setError("There was a problem with the fetch operation.");
       console.error("There was a problem with the fetch operation:", error);
     }
   }
