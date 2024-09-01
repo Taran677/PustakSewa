@@ -60,12 +60,7 @@ const LoginPage = () => {
             Login
           </button>
         </form>
-        <p className="mt-4 text-center">
-          Don't have an account?{" "}
-          <a href="/signup" className="text-purple-500">
-            Sign up
-          </a>
-        </p>
+       
       </div>
     </div>
   );

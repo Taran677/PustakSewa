@@ -28,7 +28,7 @@ export default function Navbar({ books, setBooks }) {
       }
       const data = await response.json();
       if (data) {
-        toast.success("Books fetched successfully");
+        toast.success("Books fetched Successfuly");
       }
       setBooks(data);
     } catch (error) {

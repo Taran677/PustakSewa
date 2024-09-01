@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function EditBook({ book, setBook }) {
   const navigate = useNavigate();
@@ -67,6 +68,7 @@ function EditBook({ book, setBook }) {
         throw new Error("Check you internet connection and try again");
       } else {
         const updatedBook = await response.json();
+        toast.success("Update Successful")
         setBook(updatedBook);
         navigate(`/`);
       }

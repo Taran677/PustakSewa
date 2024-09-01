@@ -13,7 +13,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: ["https://pustak-sewa.vercel.app", "https://pustak-sewa-38dx.vercel.app", "https://pustak-sewa-kipm.vercel.app", "https://vercel.com/taran677s-projects/pustak-sewa/HrKeeX5GnPrLUjAA3qiqy3ihC3Uh"], 
+    origin: [
+      "https://pustak-sewa.vercel.app",
+      "https://pustak-sewa-38dx.vercel.app",
+      "https://pustak-sewa-kipm.vercel.app",
+      "https://vercel.com/taran677s-projects/pustak-sewa/HrKeeX5GnPrLUjAA3qiqy3ihC3Uh",
+    ],
     methods: ["GET", "POST", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
@@ -50,12 +55,11 @@ app.post("/login", async (req, res) => {
 
     const token = jwt.sign(
       { contactId: contact._id, email: contact.email },
-      process.env.JWT_KEY, 
+      process.env.JWT_KEY,
       { expiresIn: "1h" }
     );
 
     res.status(200).json({ token, message: "Login successful." });
-  
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }
@@ -144,7 +148,7 @@ app.post("/books", async (req, res) => {
     await book.save();
 
     // Send a success response
-    res.status(201).json({ message: "Book added successfully", book });
+    res.status(201).json({ message: "Book added Successfuly", book });
   } catch (error) {
     // Handle errors
     res.status(500).json({ message: "Server error", error });
@@ -171,12 +175,11 @@ app.patch("/books/:id", async (req, res) => {
 
 // Route to add a new contact
 
-
 app.patch("/contacts", async (req, res) => {
   const { email, phone, password } = req.body;
 
   try {
-    const contactId = "66d33e5bbd123dcc8295d808"; 
+    const contactId = "66d33e5bbd123dcc8295d808";
 
     let updateFields = {};
 
@@ -188,9 +191,9 @@ app.patch("/contacts", async (req, res) => {
     }
 
     const result = await Contact.updateOne(
-      { _id: contactId }, 
-      { $set: updateFields }, 
-      { new: true, runValidators: true } 
+      { _id: contactId },
+      { $set: updateFields },
+      { new: true, runValidators: true }
     );
 
     if (result.matchedCount === 0) {
@@ -206,7 +209,6 @@ app.patch("/contacts", async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 });
-
 
 //This route deletes a book by its ID.
 

@@ -36,8 +36,8 @@ function CreateBook({ setBooks }) {
         throw new Error("Check you internet connection and try again");
       } else {
         const newBook = await response.json();
-        if(newBook){
-          toast.success("New Book Created Successfully!")
+        if (newBook) {
+          toast.success("New Book Created Successfuly!");
         }
         setBooks((prevBooks) => [...prevBooks, newBook]);
       }
