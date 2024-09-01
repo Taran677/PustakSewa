@@ -172,7 +172,6 @@ app.patch("/books/:id", async (req, res) => {
 
 // Route to add a new contact
 
-const bcrypt = require("bcrypt");
 
 app.patch("/contacts", async (req, res) => {
   const { email, phone, password } = req.body;
