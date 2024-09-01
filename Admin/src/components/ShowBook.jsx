@@ -20,18 +20,19 @@ function EditBook({ book, setBook }) {
           `https://pustaksewa.onrender.com/books/${id}`
         );
         if (!response.ok) {
+          toast.error(`${response.json().message}`);
           throw new Error("Check you internet connection and try again");
+        } else {
+          const data = await response.json();
+          setBook(data);
+          setFormData({
+            title: data.title,
+            author: data.author,
+            genre: data.genre,
+            available: data.available,
+            image: data.image,
+          });
         }
-
-        const data = await response.json();
-        setBook(data);
-        setFormData({
-          title: data.title,
-          author: data.author,
-          genre: data.genre,
-          available: data.available,
-          image: data.image,
-        });
       } catch (error) {
         console.error("There was a problem with the fetch operation:", error);
       }
@@ -62,11 +63,13 @@ function EditBook({ book, setBook }) {
         }
       );
       if (!response.ok) {
+        toast.error(`${response.json().message}`)
         throw new Error("Check you internet connection and try again");
+      } else {
+        const updatedBook = await response.json();
+        setBook(updatedBook);
+        navigate(`/`);
       }
-      const updatedBook = await response.json();
-      setBook(updatedBook);
-      navigate(`/`);
     } catch (error) {
       console.error("There was a problem with the update operation:", error);
     }
