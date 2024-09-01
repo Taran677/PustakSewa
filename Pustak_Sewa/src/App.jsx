@@ -41,7 +41,7 @@ function App() {
     loadingBarRef.current.continuousStart();
 
     try {
-      const response = await fetch("https://pustak-sewa-38dx.vercel.app/books");
+      const response = await fetch("https://pustaksewa.onrender.com/books");
       if (!response.ok) {
         throw new Error("Check you internet connection and try again");
       }

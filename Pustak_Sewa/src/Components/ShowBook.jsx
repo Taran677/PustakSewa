@@ -9,7 +9,7 @@ function ShowBook({ book, setBook, setLoading, setError }) {
       setLoading(true);
       try {
         const response = await fetch(
-          `https://pustak-sewa-38dx.vercel.app/books/${id}`
+          `https://pustaksewa.onrender.com/books/${id}`
         );
         if (!response.ok) {
           setError("Check you internet connection and try again");

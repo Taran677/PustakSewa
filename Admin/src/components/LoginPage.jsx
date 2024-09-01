@@ -10,7 +10,7 @@ const LoginPage = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "https://pustak-sewa-38dx.vercel.app/login",
+        "https://pustaksewa.onrender.com/login",
         { email, password }
       );
       localStorage.setItem("token", response.data.token);

@@ -19,7 +19,7 @@ const isAuthenticated = async () => {
 
   try {
     const response = await axios.post(
-      "https://pustak-sewa-38dx.vercel.app/verifyToken",
+      "https://pustaksewa.onrender.com/verifyToken",
       {
         token,
       }

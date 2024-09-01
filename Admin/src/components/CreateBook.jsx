@@ -24,16 +24,13 @@ function CreateBook({ setBooks }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(
-        "https://pustak-sewa-38dx.vercel.app/books",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
-      );
+      const response = await fetch("https://pustaksewa.onrender.com/books", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
       if (!response.ok) {
         toast.error("Check you internet connection and try again");
         throw new Error("Check you internet connection and try again");

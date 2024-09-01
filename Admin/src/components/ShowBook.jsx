@@ -17,7 +17,7 @@ function EditBook({ book, setBook }) {
     async function fetchBook() {
       try {
         const response = await fetch(
-          `https://pustak-sewa-38dx.vercel.app/books/${id}`
+          `https://pustaksewa.onrender.com/books/${id}`
         );
         if (!response.ok) {
           throw new Error("Check you internet connection and try again");
@@ -52,7 +52,7 @@ function EditBook({ book, setBook }) {
     e.preventDefault();
     try {
       const response = await fetch(
-        `https://pustak-sewa-38dx.vercel.app/books/${id}`,
+        `https://pustaksewa.onrender.com/books/${id}`,
         {
           method: "PATCH",
           headers: {
@@ -75,7 +75,7 @@ function EditBook({ book, setBook }) {
   const handleDelete = async () => {
     try {
       const response = await fetch(
-        `https://pustak-sewa-38dx.vercel.app/books/${id}`,
+        `https://pustaksewa.onrender.com/books/${id}`,
         {
           method: "DELETE",
         }

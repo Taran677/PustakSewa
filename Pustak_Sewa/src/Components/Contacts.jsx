@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
 export default function Contacts() {
-  const [contact, setContact] = useState({  });
+  const [contact, setContact] = useState({});
   async function fetchContact() {
     try {
-      const response = await fetch(
-        "https://pustak-sewa-38dx.vercel.app/contact"
-      );
+      const response = await fetch("https://pustaksewa.onrender.com/contact");
       console.log(response);
       if (!response.ok) {
         throw new Error("Check you internet connection and try again");
