@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: ["https://pustak-sewa.vercel.app", "https://pustak-sewa-38dx.vercel.app"], // Allow requests from localhost:5173 and localhost:5174
+    origin: ["https://pustak-sewa.vercel.app", "https://pustak-sewa-38dx.vercel.app", "https://pustak-sewa-kipm.vercel.app", "https://vercel.com/taran677s-projects/pustak-sewa/HrKeeX5GnPrLUjAA3qiqy3ihC3Uh"], // Allow requests from localhost:5173 and localhost:5174
     methods: ["GET", "POST", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
