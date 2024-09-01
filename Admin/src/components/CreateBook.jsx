@@ -31,13 +31,16 @@ function CreateBook({ setBooks }) {
         },
         body: JSON.stringify(formData),
       });
-      console.log(response.json());
+      console.log(response.json().message);
 
       if (!response.ok) {
         toast.error(`${response.json().message}`);
         throw new Error("Check you internet connection and try again");
       } else {
         const newBook = await response.json();
+        if(newBook){
+          toast.success("New Book Created Successfully!")
+        }
         setBooks((prevBooks) => [...prevBooks, newBook]);
       }
     } catch (error) {
