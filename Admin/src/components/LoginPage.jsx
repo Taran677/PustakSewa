@@ -15,6 +15,7 @@ const LoginPage = () => {
       );
       localStorage.setItem("token", response.data.token);
       toast.success("Login successful!");
+      window.location.href = "/"
     } catch (error) {
       toast.error(`${error.response?.data?.message}` || "An error occurred");
     }
