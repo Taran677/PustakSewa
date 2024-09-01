@@ -52,6 +52,14 @@ function UpdateContact() {
         onChange={(e) => setEmail(e.target.value)}
         placeholder="Email"
         className="w-full p-2 mb-4 border border-gray-300 rounded-md"
+      />{" "}
+      <input
+        required
+        type={showPassword ? "text" : "password"}
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder="Password"
+        className="w-full p-2 mb-4 border  border-gray-300 rounded-md"
       />
       <input
         required
@@ -61,18 +69,10 @@ function UpdateContact() {
         placeholder="Phone"
         className="w-full p-2 mb-4 border border-gray-300 rounded-md"
       />
-      <input
-        required
-        type={showPassword ? "text" : "password"}
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
-        className="w-full p-2 mb-4 border  border-gray-300 rounded-md"
-      />
       <button
         type="button"
         onClick={togglePasswordVisibility}
-        className="absolute inset-y-0 right-3 bottom-3 px-3 py-2 text-gray-500"
+        className="absolute inset-y-0 right-5 bottom-3 px-3 py-2 text-gray-500"
       >
         {showPassword ? "Hide" : "Show"}
       </button>
