@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 export default function Contacts() {
-  const [contact, setContact] = useState({setError});
+  const [contact, setContact] = useState({ setError });
   async function fetchContact() {
     try {
-      const response = await fetch("http://localhost:3000/contact");
+      const response = await fetch(
+        "https://pustak-sewa-38dx.vercel.app/contact"
+      );
       console.log(response);
       if (!response.ok) {
-        setError("Check you internet connection and try again")
+        setError("Check you internet connection and try again");
         throw new Error("Check you internet connection and try again");
       }
       const data = await response.json();

@@ -8,7 +8,9 @@ function ShowBook({ book, setBook, setLoading, setError }) {
     async function fetchBook() {
       setLoading(true);
       try {
-        const response = await fetch(`http://localhost:3000/books/${id}`);
+        const response = await fetch(
+          `https://pustak-sewa-38dx.vercel.app/books/${id}`
+        );
         if (!response.ok) {
           setError("Check you internet connection and try again");
           throw new Error("Check you internet connection and try again");

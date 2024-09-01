@@ -16,7 +16,9 @@ function EditBook({ book, setBook }) {
   useEffect(() => {
     async function fetchBook() {
       try {
-        const response = await fetch(`http://localhost:3000/books/${id}`);
+        const response = await fetch(
+          `https://pustak-sewa-38dx.vercel.app/books/${id}`
+        );
         if (!response.ok) {
           throw new Error("Check you internet connection and try again");
         }
@@ -49,13 +51,16 @@ function EditBook({ book, setBook }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:3000/books/${id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        `https://pustak-sewa-38dx.vercel.app/books/${id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
       if (!response.ok) {
         throw new Error("Check you internet connection and try again");
       }
@@ -69,9 +74,12 @@ function EditBook({ book, setBook }) {
 
   const handleDelete = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/books/${id}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `https://pustak-sewa-38dx.vercel.app/books/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
       if (!response.ok) {
         throw new Error("Check you internet connection and try again");
       }

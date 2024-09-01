@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://localhost:5174"], // Allow requests from localhost:5173 and localhost:5174
+    origin: ["https://pustak-sewa.vercel.app", "https://pustak-sewa-38dx.vercel.app"], // Allow requests from localhost:5173 and localhost:5174
     methods: ["GET", "POST", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
@@ -42,25 +42,21 @@ app.post("/login", async (req, res) => {
       return res.status(400).json({ message: "Invalid email or password." });
     }
 
-    // Compare the provided password with the hashed password in the database
     const isMatch = await bcrypt.compare(password, contact.password);
 
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid email or password." });
     }
 
-    // If email and password match, generate a JWT token
     const token = jwt.sign(
       { contactId: contact._id, email: contact.email },
-      process.env.JWT_KEY, // Replace with your actual secret key
+      process.env.JWT_KEY, 
       { expiresIn: "1h" }
     );
 
-    // Send the token as a response
     res.status(200).json({ token, message: "Login successful." });
   
   } catch (error) {
-    // Handle errors
     res.status(500).json({ message: "Server error", error });
   }
 });
@@ -69,12 +65,10 @@ app.post("/verifyToken", (req, res) => {
   const { token } = req.body;
 
   try {
-    // Verify the token using your secret key
     jwt.verify(token, process.env.JWT_KEY, (err, decoded) => {
       if (err) {
         return res.status(401).json({ message: "Invalid token." });
       }
-      // Token is valid
       res.status(200).json({ message: "Token is valid.", user: decoded });
     });
   } catch (error) {

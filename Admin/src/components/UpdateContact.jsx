@@ -7,16 +7,19 @@ function UpdateContact() {
 
   const handleUpdate = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/contacts`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          phone,
-        }),
-      });
+      const response = await fetch(
+        `https://pustak-sewa-38dx.vercel.app/contacts`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            phone,
+          }),
+        }
+      );
 
       // Check if response is empty
       if (response.status === 204) {

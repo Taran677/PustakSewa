@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
 // Trigger a toast
 
@@ -22,15 +22,17 @@ export default function Navbar({ books, setBooks }) {
   // Fetch books from API (assuming you want to fetch on component mount)
   const fetchBooks = async () => {
     try {
-      const response = await fetch("http://localhost:3000/books");
+      const response = await fetch("https://pustak-sewa-38dx.vercel.app/books");
       if (!response.ok) {
         throw new Error("Check you internet connection and try again");
       }
       const data = await response.json();
-      if(data){toast.success("Books fetched successfully")}
+      if (data) {
+        toast.success("Books fetched successfully");
+      }
       setBooks(data);
     } catch (error) {
-        toast.error("Error fetching books from server")
+      toast.error("Error fetching books from server");
       console.error("There was a problem with the fetch operation:", error);
       setLoading(false);
     }

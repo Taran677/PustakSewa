@@ -18,9 +18,12 @@ const isAuthenticated = async () => {
   if (!token) return false;
 
   try {
-    const response = await axios.post("http://localhost:3000/verifyToken", {
-      token,
-    });
+    const response = await axios.post(
+      "https://pustak-sewa-38dx.vercel.app/verifyToken",
+      {
+        token,
+      }
+    );
     return response.status === 200;
   } catch (error) {
     toast.error("Error in authentication");

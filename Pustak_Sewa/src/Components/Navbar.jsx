@@ -20,7 +20,7 @@ export default function Navbar({ books, setBooks, setLoading, setError }) {
   const fetchBooks = async () => {
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:3000/books");
+      const response = await fetch("https://pustak-sewa-38dx.vercel.app/books");
       if (!response.ok) {
         throw new Error("Check you internet connection and try again");
       }
