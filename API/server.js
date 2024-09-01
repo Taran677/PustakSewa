@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: ["https://pustak-sewa.vercel.app", "https://pustak-sewa-38dx.vercel.app", "https://pustak-sewa-kipm.vercel.app", "https://vercel.com/taran677s-projects/pustak-sewa/HrKeeX5GnPrLUjAA3qiqy3ihC3Uh"], // Allow requests from localhost:5173 and localhost:5174
+    origin: ["https://pustak-sewa.vercel.app", "https://pustak-sewa-38dx.vercel.app", "https://pustak-sewa-kipm.vercel.app", "https://vercel.com/taran677s-projects/pustak-sewa/HrKeeX5GnPrLUjAA3qiqy3ihC3Uh"], 
     methods: ["GET", "POST", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
@@ -172,18 +172,27 @@ app.patch("/books/:id", async (req, res) => {
 
 // Route to add a new contact
 
+const bcrypt = require("bcrypt");
+
 app.patch("/contacts", async (req, res) => {
-  const { email, phone } = req.body;
+  const { email, phone, password } = req.body;
 
   try {
-    // Use string ID directly
-    const contactId = "66d33e5bbd123dcc8295d808"; // Example, should be obtained dynamically
+    const contactId = "66d33e5bbd123dcc8295d808"; 
 
-    // Update the document
+    let updateFields = {};
+
+    if (email) updateFields.email = email;
+    if (phone) updateFields.phone = phone;
+    if (password) {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      updateFields.password = hashedPassword;
+    }
+
     const result = await Contact.updateOne(
-      { _id: contactId }, // Use string ID directly
-      { $set: { email, phone } },
-      { new: true, runValidators: true }
+      { _id: contactId }, 
+      { $set: updateFields }, 
+      { new: true, runValidators: true } 
     );
 
     if (result.matchedCount === 0) {
@@ -192,7 +201,6 @@ app.patch("/contacts", async (req, res) => {
         .json({ message: "Contact not found or no changes made" });
     }
 
-    // Fetch and return the updated contact
     const updatedContact = await Contact.findById(contactId);
     res.status(200).json(updatedContact);
   } catch (err) {
@@ -200,6 +208,7 @@ app.patch("/contacts", async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 });
+
 
 //This route deletes a book by its ID.
 

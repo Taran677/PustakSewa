@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-
 function UpdateContact() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
   const handleUpdate = async () => {
@@ -17,23 +17,21 @@ function UpdateContact() {
           body: JSON.stringify({
             email,
             phone,
+            password,
           }),
         }
       );
 
-      // Check if response is empty
       if (response.status === 204) {
         setMessage("No content to display.");
         return;
       }
 
-      // Check if response is OK
       if (!response.ok) {
         const errorText = await response.text(); // Use text() to get the raw error message
         throw new Error(errorText);
       }
 
-      // Try parsing JSON if response is not empty
       const updatedContact = await response.json();
       setMessage(`Contact updated: ${JSON.stringify(updatedContact)}`);
     } catch (error) {
@@ -56,6 +54,14 @@ function UpdateContact() {
         required
         type="text"
         value={phone}
+        onChange={(e) => setPhone(e.target.value)}
+        placeholder="Phone"
+        className="w-full p-2 mb-4 border border-gray-300 rounded-md"
+      />
+      <input
+        required
+        type="text"
+        value={password}
         onChange={(e) => setPhone(e.target.value)}
         placeholder="Phone"
         className="w-full p-2 mb-4 border border-gray-300 rounded-md"
