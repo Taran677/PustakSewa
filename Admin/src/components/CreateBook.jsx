@@ -31,6 +31,8 @@ function CreateBook({ setBooks }) {
         },
         body: JSON.stringify(formData),
       });
+      console.log(response.json());
+
       if (!response.ok) {
         toast.error(`${response.json().message}`);
         throw new Error("Check you internet connection and try again");
