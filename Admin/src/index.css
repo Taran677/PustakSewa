@@ -150,7 +150,9 @@ animation-delay: -0.15s;
 .wrapper2 {
   max-width: 100vw;
 }
-
+.logo{
+  min-width: max-content;
+}
 .donate {
   flex-direction: column !important;
   height: 100%;
