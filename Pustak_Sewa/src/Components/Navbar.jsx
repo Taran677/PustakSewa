@@ -24,6 +24,14 @@ export default function Navbar({ books, setBooks, setLoading, setError }) {
     }
   };
 
+  const normalizeAuthorName = (name) => {
+    return name
+      .toLowerCase()
+      .replace(/\s+/g, "")
+      .replace(/\./g, "")
+      .replace(/\,/g, "");
+  };
+
   const handleSearch = (query) => {
     setSearchQuery(query);
     const trimmedQuery = query.toLowerCase().trim();
@@ -42,9 +50,22 @@ export default function Navbar({ books, setBooks, setLoading, setError }) {
       );
       setSearchResults(filteredCategories);
     } else if (searchType === "author") {
-      const uniqueAuthors = [...new Set(allBooks.map((book) => book.author.trim()))];
-      const filteredAuthors = uniqueAuthors.filter((author) =>
-        author.toLowerCase().trim().includes(trimmedQuery)
+      const uniqueAuthors = [
+        ...new Set(allBooks.map((book) => book.author.trim())),
+      ];
+      const normalizedAuthors = uniqueAuthors.reduce((acc, author) => {
+        const normalizedName = normalizeAuthorName(author);
+        if (!acc[normalizedName]) {
+          acc[normalizedName] = author;
+        }
+        return acc;
+      }, {});
+
+      const filteredAuthors = Object.values(normalizedAuthors).filter(
+        (author) =>
+          normalizeAuthorName(author).includes(
+            normalizeAuthorName(trimmedQuery)
+          )
       );
       setSearchResults(filteredAuthors);
     }
@@ -56,17 +77,21 @@ export default function Navbar({ books, setBooks, setLoading, setError }) {
       window.location.reload();
     } else if (searchType === "category") {
       navigate("/books");
-      const filteredBooks = allBooks.filter((book) => book.genre.trim() === result);
+      const filteredBooks = allBooks.filter((book) =>
+        book.genre.trim().toLowerCase().includes(result.toLowerCase())
+      );
       setBooks(filteredBooks);
     } else if (searchType === "author") {
       navigate("/books");
-      const filteredBooks = allBooks.filter((book) => book.author.trim() === result);
+      const filteredBooks = allBooks.filter(
+        (book) =>
+          normalizeAuthorName(book.author) === normalizeAuthorName(result)
+      );
       setBooks(filteredBooks);
     }
     setSearchQuery("");
     setSearchResults([]);
   };
-
   const fetchBooks = async () => {
     setLoading(true);
     try {
@@ -127,7 +152,6 @@ export default function Navbar({ books, setBooks, setLoading, setError }) {
           className="text-black text-xl flex font-light justify-start items-center flex-row cursor-pointer w-full my-1"
           onClick={() => {
             navigate("/");
-            // window.location.reload();
             handleSearchTypeChange("all");
           }}
         >

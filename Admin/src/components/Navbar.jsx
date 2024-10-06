@@ -29,6 +29,7 @@ export default function Navbar({ books, setBooks }) {
     return name
       .toLowerCase()
       .replace(/\./g, "") // Remove all dots
+      .replace(/\,/g, "") // Remove all commas
       .replace(/\s+/g, "") // Replace multiple spaces 
       .trim();
   };
@@ -92,7 +93,7 @@ export default function Navbar({ books, setBooks }) {
     setSearchQuery("");
     setSearchResults([]);
   };
-  
+
   const fetchBooks = async () => {
     try {
       const response = await fetch("https://pustaksewa.onrender.com/books");
