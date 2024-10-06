@@ -3,16 +3,23 @@ import { useNavigate } from "react-router-dom";
 
 export default function Navbar({ books, setBooks, setLoading, setError }) {
   const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [sortDropdownVisible, setSortDropdownVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [searchType, setSearchType] = useState("category");
+  const [sortType, setSortType] = useState("none");
   const [allBooks, setAllBooks] = useState([]);
   const searchContainerRef = useRef(null);
   const dropdownRef = useRef(null);
+  const sortDropdownRef = useRef(null);
   const navigate = useNavigate();
 
   const handleDropdownToggle = () => {
     setDropdownVisible((prev) => !prev);
+  };
+
+  const handleSortDropdownToggle = () => {
+    setSortDropdownVisible((prev) => !prev);
   };
 
   const handleSearchTypeChange = (newType) => {
@@ -24,8 +31,8 @@ export default function Navbar({ books, setBooks, setLoading, setError }) {
     }
   };
 
-  const normalizeAuthorName = (name) => {
-    return name
+  const normalizeString = (str) => {
+    return str
       .toLowerCase()
       .replace(/\s+/g, "")
       .replace(/\./g, "")
@@ -54,7 +61,7 @@ export default function Navbar({ books, setBooks, setLoading, setError }) {
         ...new Set(allBooks.map((book) => book.author.trim())),
       ];
       const normalizedAuthors = uniqueAuthors.reduce((acc, author) => {
-        const normalizedName = normalizeAuthorName(author);
+        const normalizedName = normalizeString(author);
         if (!acc[normalizedName]) {
           acc[normalizedName] = author;
         }
@@ -63,9 +70,7 @@ export default function Navbar({ books, setBooks, setLoading, setError }) {
 
       const filteredAuthors = Object.values(normalizedAuthors).filter(
         (author) =>
-          normalizeAuthorName(author).includes(
-            normalizeAuthorName(trimmedQuery)
-          )
+          normalizeString(author).includes(normalizeString(trimmedQuery))
       );
       setSearchResults(filteredAuthors);
     }
@@ -84,14 +89,32 @@ export default function Navbar({ books, setBooks, setLoading, setError }) {
     } else if (searchType === "author") {
       navigate("/books");
       const filteredBooks = allBooks.filter(
-        (book) =>
-          normalizeAuthorName(book.author) === normalizeAuthorName(result)
+        (book) => normalizeString(book.author) === normalizeString(result)
       );
       setBooks(filteredBooks);
     }
     setSearchQuery("");
     setSearchResults([]);
   };
+
+  const handleSort = (type) => {
+    setSortType(type);
+    let sortedBooks = [...allBooks];
+
+    if (type === "category") {
+      sortedBooks.sort((a, b) =>
+        normalizeString(a.genre).localeCompare(normalizeString(b.genre))
+      );
+    } else if (type === "author") {
+      sortedBooks.sort((a, b) =>
+        normalizeString(a.author).localeCompare(normalizeString(b.author))
+      );
+    }
+
+    setBooks(sortedBooks);
+    setSortDropdownVisible(false);
+  };
+
   const fetchBooks = async () => {
     setLoading(true);
     try {
@@ -122,6 +145,13 @@ export default function Navbar({ books, setBooks, setLoading, setError }) {
         !event.target.closest("button")
       ) {
         setDropdownVisible(false);
+      }
+      if (
+        sortDropdownRef.current &&
+        !sortDropdownRef.current.contains(event.target) &&
+        !event.target.closest("button")
+      ) {
+        setSortDropdownVisible(false);
       }
       if (
         searchContainerRef.current &&
@@ -172,9 +202,9 @@ export default function Navbar({ books, setBooks, setLoading, setError }) {
           </span>
         </div>
 
-        {/* Search Type Selector */}
-        <div className="wrapperinput">
-          <div className="relative" ref={dropdownRef}>
+        {/* Search Type Selector and Search Bar */}
+        <div className="wrapperinput flex flex-row  items-center">
+          <div className="relative z-10" ref={dropdownRef}>
             <button
               className="bg-slate-900 text-white rounded-md shadow-sm px-2 py-2 rounded-r-none"
               onClick={handleDropdownToggle}
@@ -242,12 +272,8 @@ export default function Navbar({ books, setBooks, setLoading, setError }) {
               </div>
             )}
           </div>
-
           {/* Search Bar */}
-          <div
-            className="relative sm:w-1/3 w-full my-1"
-            ref={searchContainerRef}
-          >
+          <div className="relative md:w-64 w-full" ref={searchContainerRef}>
             <input
               type="text"
               placeholder={
@@ -284,8 +310,38 @@ export default function Navbar({ books, setBooks, setLoading, setError }) {
                 ))}
               </ul>
             )}
+          </div>{" "}
+          <div
+            className="relative z-20"
+            ref={sortDropdownRef}
+          >
+            <button
+              className="bg-slate-900 text-white rounded-md shadow-sm px-2 py-2 rounded-l-none text-sm"
+              onClick={handleSortDropdownToggle}
+            >
+              Sort
+            </button>
+            {sortDropdownVisible && (
+              <div className="absolute right-0   mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                <div className="py-1">
+                  <button
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    onClick={() => handleSort("category")}
+                  >
+                    By Category
+                  </button>
+                  <button
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    onClick={() => handleSort("author")}
+                  >
+                    By Author
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
+        {/* Sort Dropdown */}
       </div>
     </nav>
   );
