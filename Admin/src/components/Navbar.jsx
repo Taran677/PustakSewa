@@ -27,27 +27,28 @@ export default function Navbar({ books, setBooks }) {
 
   const handleSearch = (query) => {
     setSearchQuery(query);
+    const trimmedQuery = query.toLowerCase().trim();
+  
     if (searchType === "name") {
       const filteredBooks = allBooks.filter((book) =>
-        book.title.toLowerCase().trim().includes(query.toLowerCase().trim())
+        book.title.toLowerCase().trim().includes(trimmedQuery)
       );
       setSearchResults(filteredBooks);
     } else if (searchType === "category") {
-      const uniqueCategories = [...new Set(allBooks.map((book) => book.genre))];
+      const uniqueCategories = [...new Set(allBooks.map((book) => book.genre.trim()))];
       const filteredCategories = uniqueCategories.filter((category) =>
-        category.toLowerCase().trim().includes(query.toLowerCase().trim())
+        category.toLowerCase().trim().includes(trimmedQuery)
       );
       setSearchResults(filteredCategories);
     } else if (searchType === "author") {
-      const uniqueCategories = [
-        ...new Set(allBooks.map((book) => book.author)),
-      ];
-      const filteredCategories = uniqueCategories.filter((category) =>
-        category.toLowerCase().trim().includes(query.toLowerCase().trim())
+      const uniqueAuthors = [...new Set(allBooks.map((book) => book.author.trim()))];
+      const filteredAuthors = uniqueAuthors.filter((author) =>
+        author.toLowerCase().trim().includes(trimmedQuery)
       );
-      setSearchResults(filteredCategories);
+      setSearchResults(filteredAuthors);
     }
   };
+  
 
   const handleResultSelect = (result) => {
     if (searchType === "name") {
@@ -215,7 +216,7 @@ export default function Navbar({ books, setBooks }) {
                       <input
                         type="radio"
                         name="searchType"
-                        value="name"
+                        value="author"
                         checked={searchType === "author"}
                         onChange={() => handleSearchTypeChange("author")}
                         className="mr-2"
