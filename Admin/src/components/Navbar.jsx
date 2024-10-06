@@ -44,6 +44,7 @@ export default function Navbar({ books, setBooks }) {
   const handleResultSelect = (result) => {
     if (searchType === "name") {
       navigate(`/showbook/${result._id}`);
+      window.location.reload();
     } else if (searchType === "category") {
       navigate("/books");
       const filteredBooks = allBooks.filter((book) => book.genre === result);
@@ -111,7 +112,7 @@ export default function Navbar({ books, setBooks }) {
         <div className="flex flex-row justify-between w-full">
           <div
             className="text-black text-xl flex font-light justify-start items-center flex-row cursor-pointer w-full my-1"
-            onClick={() => navigate("/")}
+            onClick={() => {navigate("/");window.location.reload()}}
           >
             <span className="flex px-2 justify-center items-center">
               <svg
