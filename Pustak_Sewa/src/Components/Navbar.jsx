@@ -28,13 +28,13 @@ export default function Navbar({ books, setBooks, setLoading, setError }) {
     setSearchQuery(query);
     if (searchType === "name") {
       const filteredBooks = allBooks.filter((book) =>
-        book.title.toLowerCase().includes(query.toLowerCase())
+        book.title.toLowerCase().trim().includes(query.toLowerCase().trim())
       );
       setSearchResults(filteredBooks);
     } else if (searchType === "category") {
       const uniqueCategories = [...new Set(allBooks.map((book) => book.genre))];
       const filteredCategories = uniqueCategories.filter((category) =>
-        category.toLowerCase().includes(query.toLowerCase())
+        category.toLowerCase().trim().includes(query.toLowerCase().trim())
       );
       setSearchResults(filteredCategories);
     } else if (searchType === "author") {
@@ -42,7 +42,7 @@ export default function Navbar({ books, setBooks, setLoading, setError }) {
         ...new Set(allBooks.map((book) => book.author)),
       ];
       const filteredCategories = uniqueCategories.filter((category) =>
-        category.toLowerCase().includes(query.toLowerCase())
+        category.toLowerCase().trim().includes(query.toLowerCase().trim())
       );
       setSearchResults(filteredCategories);
     }
