@@ -2,36 +2,72 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-
 export default function Navbar({ books, setBooks }) {
+  const [dropdownVisible, setDropdownVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredBooks, setFilteredBooks] = useState([]);
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchType, setSearchType] = useState("category");
+  const [allBooks, setAllBooks] = useState([]);
   const searchContainerRef = useRef(null);
+  const dropdownRef = useRef(null);
   const navigate = useNavigate();
+
+  const handleDropdownToggle = () => {
+    setDropdownVisible((prev) => !prev);
+  };
+
+  const handleSearchTypeChange = (newType) => {
+    setSearchType(newType);
+    setSearchQuery("");
+    setSearchResults([]);
+    if (newType === "all") {
+      fetchBooks();
+    }
+  };
 
   const handleSearch = (query) => {
     setSearchQuery(query);
-    const filtered = books.filter((book) =>
-      book.title.toLowerCase().includes(query.toLowerCase())
-    );
-    setFilteredBooks(filtered);
+    if (searchType === "name") {
+      const filteredBooks = allBooks.filter((book) =>
+        book.title.toLowerCase().includes(query.toLowerCase())
+      );
+      setSearchResults(filteredBooks);
+    } else if (searchType === "category") {
+      const uniqueCategories = [...new Set(allBooks.map((book) => book.genre))];
+      const filteredCategories = uniqueCategories.filter((category) =>
+        category.toLowerCase().includes(query.toLowerCase())
+      );
+      setSearchResults(filteredCategories);
+    }
+  };
+
+  const handleResultSelect = (result) => {
+    if (searchType === "name") {
+      navigate(`/showbook/${result._id}`);
+    } else if (searchType === "category") {
+      navigate("/books");
+      const filteredBooks = allBooks.filter((book) => book.genre === result);
+      setBooks(filteredBooks);
+    }
+    setSearchQuery("");
+    setSearchResults([]);
   };
 
   const fetchBooks = async () => {
     try {
       const response = await fetch("https://pustaksewa.onrender.com/books");
       if (!response.ok) {
-        throw new Error("Check you internet connection and try again");
+        throw new Error("Check your internet connection and try again");
       }
       const data = await response.json();
       if (data) {
-        toast.success("Books fetched Successfuly");
+        toast.success("Books fetched Successfully");
       }
+      setAllBooks(data);
       setBooks(data);
     } catch (error) {
       toast.error("Error fetching books from server");
       console.error("There was a problem with the fetch operation:", error);
-      setLoading(false);
     }
   };
 
@@ -42,10 +78,17 @@ export default function Navbar({ books, setBooks }) {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target) &&
+        !event.target.closest("button")
+      ) {
+        setDropdownVisible(false);
+      }
+      if (
         searchContainerRef.current &&
         !searchContainerRef.current.contains(event.target)
       ) {
-        setFilteredBooks([]);
+        setSearchResults([]);
       }
     };
 
@@ -91,7 +134,7 @@ export default function Navbar({ books, setBooks }) {
             Contact Info
           </div>
           <div
-            className=" font-sans p-1 aspect-square rounded-full mx-3 mr-5 bg-purple-500 cursor-pointer hover:bg-purple-400"
+            className="font-sans p-1 aspect-square rounded-full mx-3 mr-5 bg-purple-500 cursor-pointer hover:bg-purple-400"
             onClick={() => navigate("/createBook/new")}
           >
             <svg
@@ -105,38 +148,101 @@ export default function Navbar({ books, setBooks }) {
             </svg>
           </div>
         </div>
-        <div className="relative sm:w-1/3 w-full my-1" ref={searchContainerRef}>
-          <input
-            type="text"
-            placeholder="Search Books"
-            value={searchQuery}
-            onChange={(e) => handleSearch(e.target.value)}
-            className="w-full py-2 px-4 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 bg-slate-100 text-sm"
-          />
-          <button className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-600 bg-gray-700 rounded-full p-1">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="1rem"
-              viewBox="0 -960 960 960"
-              width="1rem"
-              fill="#f0f0f0"
-            >
-              <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z" />
-            </svg>
-          </button>
-
-          {filteredBooks.length > 0 && (
-            <ul className="absolute top-full left-0 w-full bg-white shadow-lg rounded-md z-10">
-              {filteredBooks.map((book) => (
-                <li
-                  key={book.id}
-                  className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
-                  onClick={() => {
-                    navigate(`/showbook/${book._id}`);
-                    window.location.reload();
-                  }}
+        <div className="relative sm:w-1/3 w-full my-1">
+          <div className="flex">
+            <div className="relative" ref={dropdownRef}>
+              <button
+                className="bg-slate-900 text-white rounded-md shadow-sm px-2 py-2 rounded-r-none"
+                onClick={handleDropdownToggle}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="20px"
+                  viewBox="0 -960 960 960"
+                  width="20px"
+                  fill="#e8eaed"
                 >
-                  {book.title}
+                  <path d="M440-440h280v-280H440v280ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z" />
+                </svg>
+              </button>
+
+              {dropdownVisible && (
+                <div className="absolute md:right-0 left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                  <div className="py-1">
+                    <label className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="searchType"
+                        value="category"
+                        checked={searchType === "category"}
+                        onChange={() => handleSearchTypeChange("category")}
+                        className="mr-2"
+                      />
+                      Search by Category
+                    </label>
+                    <label className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="searchType"
+                        value="name"
+                        checked={searchType === "name"}
+                        onChange={() => handleSearchTypeChange("name")}
+                        className="mr-2"
+                      />
+                      Search by Name
+                    </label>
+                    <label className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="searchType"
+                        value="all"
+                        checked={searchType === "all"}
+                        onChange={() => handleSearchTypeChange("all")}
+                        className="mr-2"
+                      />
+                      View All Books
+                    </label>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="relative flex-grow" ref={searchContainerRef}>
+              <input
+                type="text"
+                placeholder={
+                  searchType === "all"
+                    ? "All books displayed"
+                    : `Search by ${searchType}`
+                }
+                value={searchQuery}
+                onChange={(e) => handleSearch(e.target.value)}
+                className="w-full py-2 px-4 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 bg-slate-100 text-sm rounded-l-none"
+                disabled={searchType === "all"}
+              />
+              <button className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-600 bg-gray-700 rounded-full p-1">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="1rem"
+                  viewBox="0 -960 960 960"
+                  width="1rem"
+                  fill="#f0f0f0"
+                >
+                  <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          {searchResults.length > 0 && searchType !== "all" && (
+            <ul className="absolute top-full left-0 w-full bg-white shadow-lg rounded-md z-10 list">
+              {searchResults.map((result, index) => (
+                <li
+                  key={searchType === "name" ? result._id : index}
+                  className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                  onClick={() => handleResultSelect(result)}
+                >
+                  {searchType === "name" ? result.title : result}
                 </li>
               ))}
             </ul>

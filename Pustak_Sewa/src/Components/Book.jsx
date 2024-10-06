@@ -1,34 +1,38 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function Book({ book, books, setBook, index, setError }) {
   const navigate = useNavigate();
-  useEffect(()=>{
-    if(!books){
-      setError("No Books Found")
-      navigate("/")
+  useEffect(() => {
+    if (!books) {
+      setError("No Books Found");
+      navigate("/");
     }
-
-  } ,[])
+  }, []);
   return (
     <div
       onClick={() => {
-        setBook(books[index])
+        setBook(books[index]);
         navigate(`/showbook/${book._id}`);
       }}
-      className="bookFromStore min-w-64 flex cursor-pointer p-5 justify-between rounded-lg m-5 flex-col"
+      className="bookFromStore relative right-16 min-w-72 flex cursor-pointer p-5 justify-between rounded-lg m-5 flex-col"
     >
       <img
         src={book.image}
-        className="relative rounded-xl pt-5 my-2 object-contain pb-1 aspect-square w-64 bg-gray-200"
+        className=" rounded-xl pt-5 my-2 object-contain pb-1 aspect-square w-64 bg-gray-200"
         alt="error"
         style={{ boxShadow: "none" }}
+        loading="lazy"
       />
       <span className="authorTitle flex flex-col">
         {" "}
         <h3 className="booknameCard text-xl w-full break-words overflow-y-scroll">
           {book.title}
         </h3>
+        <p className="authorCard py-1">
+          Category:{" "}
+          <span className="text-purple-500">{book.genre || "Unknown"}</span>
+        </p>
         <p className="authorCard py-1">
           By <span className="text-purple-500">{book.author || "Unknown"}</span>
         </p>

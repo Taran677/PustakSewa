@@ -67,6 +67,10 @@ html,
   height: 50%;
   bottom: 0;
 }
+.list{
+  max-height: 60vh;
+  overflow-y: scroll;
+}
 
 .contactus,
 .available {

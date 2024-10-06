@@ -14,7 +14,7 @@ export default function AllBooks({ books, setBook, setError }) {
         </h2>
       </div>
       <div className="wrapper flex items-center justify-center">
-        <div className="bookCollection  grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1  px-5 py-10  justify-evenly w-fit f items-stretch relative">
+        <div className="bookCollection grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1  gap-5  px-5 py-10  justify-evenly w-fit f items-stretch relative ">
           {books.map((book, index) => {
             return (
               <Book
