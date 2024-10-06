@@ -29,7 +29,7 @@ export default function Navbar({ books, setBooks }) {
     return name
       .toLowerCase()
       .replace(/\./g, "") // Remove all dots
-      .replace(/\s+/g, " ") // Replace multiple spaces with a single space
+      .replace(/\s+/g, "") // Replace multiple spaces 
       .trim();
   };
 
@@ -74,22 +74,25 @@ export default function Navbar({ books, setBooks }) {
     if (searchType === "name") {
       navigate(`/showbook/${result._id}`);
       window.location.reload();
-    } else if (searchType === "category") {
+    } 
+    else if (searchType === "category") {
       navigate("/books");
-      const filteredBooks = allBooks.filter((book) => book.genre === result);
+      const filteredBooks = allBooks.filter((book) => 
+        book.genre.trim().toLowerCase().includes(result.toLowerCase())
+      );
       setBooks(filteredBooks);
-    } else if (searchType === "author") {
+    }
+    else if (searchType === "author") {
       navigate("/books");
-      const filteredBooks = allBooks.filter(
-        (book) =>
-          normalizeAuthorName(book.author) === normalizeAuthorName(result)
+      const filteredBooks = allBooks.filter((book) => 
+        normalizeAuthorName(book.author) === normalizeAuthorName(result)
       );
       setBooks(filteredBooks);
     }
     setSearchQuery("");
     setSearchResults([]);
   };
-
+  
   const fetchBooks = async () => {
     try {
       const response = await fetch("https://pustaksewa.onrender.com/books");
