@@ -25,44 +25,65 @@ export default function Navbar({ books, setBooks }) {
     }
   };
 
+  const normalizeAuthorName = (name) => {
+    return name
+      .toLowerCase()
+      .replace(/\./g, "") // Remove all dots
+      .replace(/\s+/g, " ") // Replace multiple spaces with a single space
+      .trim();
+  };
+
   const handleSearch = (query) => {
     setSearchQuery(query);
     const trimmedQuery = query.toLowerCase().trim();
-  
+
     if (searchType === "name") {
       const filteredBooks = allBooks.filter((book) =>
         book.title.toLowerCase().trim().includes(trimmedQuery)
       );
       setSearchResults(filteredBooks);
     } else if (searchType === "category") {
-      const uniqueCategories = [...new Set(allBooks.map((book) => book.genre.trim()))];
+      const uniqueCategories = [
+        ...new Set(allBooks.map((book) => book.genre.trim())),
+      ];
       const filteredCategories = uniqueCategories.filter((category) =>
         category.toLowerCase().trim().includes(trimmedQuery)
       );
       setSearchResults(filteredCategories);
     } else if (searchType === "author") {
-      const uniqueAuthors = [...new Set(allBooks.map((book) => book.author.trim()))];
+      const authorMap = new Map();
+      allBooks.forEach((book) => {
+        const normalizedAuthor = normalizeAuthorName(book.author);
+        if (
+          !authorMap.has(normalizedAuthor) ||
+          book.author.length > authorMap.get(normalizedAuthor).length
+        ) {
+          authorMap.set(normalizedAuthor, book.author);
+        }
+      });
+
+      const uniqueAuthors = Array.from(authorMap.values());
       const filteredAuthors = uniqueAuthors.filter((author) =>
-        author.toLowerCase().trim().includes(trimmedQuery)
+        normalizeAuthorName(author).includes(normalizeAuthorName(trimmedQuery))
       );
       setSearchResults(filteredAuthors);
     }
   };
-  
 
   const handleResultSelect = (result) => {
     if (searchType === "name") {
       navigate(`/showbook/${result._id}`);
       window.location.reload();
-    } 
-    else if (searchType === "category") {
+    } else if (searchType === "category") {
       navigate("/books");
       const filteredBooks = allBooks.filter((book) => book.genre === result);
       setBooks(filteredBooks);
-    }
-    else if (searchType === "author") {
+    } else if (searchType === "author") {
       navigate("/books");
-      const filteredBooks = allBooks.filter((book) => book.author === result);
+      const filteredBooks = allBooks.filter(
+        (book) =>
+          normalizeAuthorName(book.author) === normalizeAuthorName(result)
+      );
       setBooks(filteredBooks);
     }
     setSearchQuery("");
