@@ -26,25 +26,27 @@ export default function Navbar({ books, setBooks, setLoading, setError }) {
 
   const handleSearch = (query) => {
     setSearchQuery(query);
+    const trimmedQuery = query.toLowerCase().trim();
+
     if (searchType === "name") {
       const filteredBooks = allBooks.filter((book) =>
-        book.title.toLowerCase().trim().includes(query.toLowerCase().trim())
+        book.title.toLowerCase().trim().includes(trimmedQuery)
       );
       setSearchResults(filteredBooks);
     } else if (searchType === "category") {
-      const uniqueCategories = [...new Set(allBooks.map((book) => book.genre))];
+      const uniqueCategories = [
+        ...new Set(allBooks.map((book) => book.genre.trim())),
+      ];
       const filteredCategories = uniqueCategories.filter((category) =>
-        category.toLowerCase().trim().includes(query.toLowerCase().trim())
+        category.toLowerCase().trim().includes(trimmedQuery)
       );
       setSearchResults(filteredCategories);
     } else if (searchType === "author") {
-      const uniqueCategories = [
-        ...new Set(allBooks.map((book) => book.author)),
-      ];
-      const filteredCategories = uniqueCategories.filter((category) =>
-        category.toLowerCase().trim().includes(query.toLowerCase().trim())
+      const uniqueAuthors = [...new Set(allBooks.map((book) => book.author.trim()))];
+      const filteredAuthors = uniqueAuthors.filter((author) =>
+        author.toLowerCase().trim().includes(trimmedQuery)
       );
-      setSearchResults(filteredCategories);
+      setSearchResults(filteredAuthors);
     }
   };
 
@@ -52,15 +54,13 @@ export default function Navbar({ books, setBooks, setLoading, setError }) {
     if (searchType === "name") {
       navigate(`/showbook/${result._id}`);
       window.location.reload();
-    } 
-    else if (searchType === "category") {
+    } else if (searchType === "category") {
       navigate("/books");
-      const filteredBooks = allBooks.filter((book) => book.genre === result);
+      const filteredBooks = allBooks.filter((book) => book.genre.trim() === result);
       setBooks(filteredBooks);
-    }
-    else if (searchType === "author") {
+    } else if (searchType === "author") {
       navigate("/books");
-      const filteredBooks = allBooks.filter((book) => book.author === result);
+      const filteredBooks = allBooks.filter((book) => book.author.trim() === result);
       setBooks(filteredBooks);
     }
     setSearchQuery("");
@@ -196,7 +196,7 @@ export default function Navbar({ books, setBooks, setLoading, setError }) {
                     <input
                       type="radio"
                       name="searchType"
-                      value="name"
+                      value="author"
                       checked={searchType === "author"}
                       onChange={() => handleSearchTypeChange("author")}
                       className="mr-2"
