@@ -235,7 +235,7 @@ export default function Navbar({ books, setBooks }) {
           </div>
 
           {searchResults.length > 0 && searchType !== "all" && (
-            <ul className="absolute top-full left-0 w-full bg-white shadow-lg rounded-md z-10 list">
+            <ul id="scrollbar1" className="absolute top-full left-0 w-full bg-white shadow-lg rounded-md z-10 list">
               {searchResults.map((result, index) => (
                 <li
                   key={searchType === "name" ? result._id : index}

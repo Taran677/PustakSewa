@@ -43,6 +43,8 @@ export default function Navbar({ books, setBooks, setLoading, setError }) {
   const handleResultSelect = (result) => {
     if (searchType === "name") {
       navigate(`/showbook/${result._id}`);
+      window.location.reload();  
+      
     } else if (searchType === "category") {
       navigate("/books");
       const filteredBooks = allBooks.filter((book) => book.genre === result);
