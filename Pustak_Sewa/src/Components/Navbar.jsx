@@ -43,8 +43,7 @@ export default function Navbar({ books, setBooks, setLoading, setError }) {
   const handleResultSelect = (result) => {
     if (searchType === "name") {
       navigate(`/showbook/${result._id}`);
-      window.location.reload();  
-      
+      window.location.reload();
     } else if (searchType === "category") {
       navigate("/books");
       const filteredBooks = allBooks.filter((book) => book.genre === result);
@@ -112,7 +111,11 @@ export default function Navbar({ books, setBooks, setLoading, setError }) {
         {/* Logo and navigation */}
         <div
           className="text-black text-xl flex font-light justify-start items-center flex-row cursor-pointer w-full my-1"
-          onClick={() => navigate("/")}
+          onClick={() => {
+            navigate("/");
+            // window.location.reload();
+            handleSearchTypeChange("all")
+          }}
         >
           <span className="flex px-2 justify-center items-center">
             <svg
