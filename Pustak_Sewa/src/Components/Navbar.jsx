@@ -37,6 +37,14 @@ export default function Navbar({ books, setBooks, setLoading, setError }) {
         category.toLowerCase().includes(query.toLowerCase())
       );
       setSearchResults(filteredCategories);
+    } else if (searchType === "author") {
+      const uniqueCategories = [
+        ...new Set(allBooks.map((book) => book.author)),
+      ];
+      const filteredCategories = uniqueCategories.filter((category) =>
+        category.toLowerCase().includes(query.toLowerCase())
+      );
+      setSearchResults(filteredCategories);
     }
   };
 
@@ -44,9 +52,15 @@ export default function Navbar({ books, setBooks, setLoading, setError }) {
     if (searchType === "name") {
       navigate(`/showbook/${result._id}`);
       window.location.reload();
-    } else if (searchType === "category") {
+    } 
+    else if (searchType === "category") {
       navigate("/books");
       const filteredBooks = allBooks.filter((book) => book.genre === result);
+      setBooks(filteredBooks);
+    }
+    else if (searchType === "author") {
+      navigate("/books");
+      const filteredBooks = allBooks.filter((book) => book.author === result);
       setBooks(filteredBooks);
     }
     setSearchQuery("");
@@ -114,7 +128,7 @@ export default function Navbar({ books, setBooks, setLoading, setError }) {
           onClick={() => {
             navigate("/");
             // window.location.reload();
-            handleSearchTypeChange("all")
+            handleSearchTypeChange("all");
           }}
         >
           <span className="flex px-2 justify-center items-center">
@@ -177,6 +191,17 @@ export default function Navbar({ books, setBooks, setLoading, setError }) {
                       className="mr-2"
                     />
                     Search by Name
+                  </label>
+                  <label className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="searchType"
+                      value="name"
+                      checked={searchType === "author"}
+                      onChange={() => handleSearchTypeChange("author")}
+                      className="mr-2"
+                    />
+                    Search by Author
                   </label>
                   <label className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">
                     <input

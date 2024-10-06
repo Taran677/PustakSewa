@@ -76,6 +76,7 @@ export default function Books({ books, setBook }) {
           );
         })}
         <div  onClick={() => {
+          
               navigate("/books");
             }} className="viewall bookFromStore relative right-16 min-w-72 flex cursor-pointer p-5 rounded-lg m-5 flex-col items-center justify-center min-h-80 bg-purple-300">
           {" "}
